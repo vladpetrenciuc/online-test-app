@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
+import UserContext from "./userContext";
 
 export default class Registration extends Component {
   constructor(props) {
@@ -27,45 +28,51 @@ export default class Registration extends Component {
     return optionList;
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   }
 
-  handleSubmit(event) {
-    this.setState({ redirectToTest: true });
+  handleSubmit = (context) => (event) => {
+    context.setUserState({ firstName: this.state.firstName, lastName: this.state.lastName, age: this.state.age });
+    this.setState({redirectToTest: true });
   }
 
   render() {
     if (this.state.redirectToTest === true) {
-      return <Redirect to={{ pathname: "/test", state: { firstName: this.state.firstName, lastName: this.state.lastName, age: this.state.age } }} />; //this may not be correct or useful
+      return (
+        <Redirect to="/test" />
+      )
     } else {
       return (
-        <div>
-          <h2>Registration</h2>
-          <form onSubmit={this.handleSubmit}>
-            <label>
-              First Name:
-            <input type="text" name="first_name" onChange={this.handleChange} />
-            </label>
-            <br></br>
-            <br></br>
-            <label>
-              Last Name:
-            <input type="text" name="last_name" onChange={this.handleChange} />
-            </label>
-            <br></br>
-            <br></br>
-            <label>
-              Age:
-            <select onChange={this.handleChange}>
-                {this.selectListAge()}
-              </select>
-            </label>
-            <br></br>
-            <br></br>
-            <input type="submit" value="Submit" />
-          </form>
-        </div>
+        <UserContext.Consumer>{context => (
+          <div>
+            <h2>Registration</h2>
+            <form onSubmit={this.handleSubmit(context)}>
+              <label>
+                First Name:
+            <input type="text" name="firstName" onChange={this.handleChange} />
+              </label>
+              <br></br>
+              <br></br>
+              <label>
+                Last Name:
+            <input type="text" name="lastName" onChange={this.handleChange} />
+              </label>
+              <br></br>
+              <br></br>
+              <label>
+                Age:
+              <select name="age" onChange={this.handleChange}>
+                  {this.selectListAge()}
+                </select>
+              </label>
+              <br></br>
+              <br></br>
+              <input type="submit" value="Submit" />
+            </form>
+          </div>)}
+
+        </UserContext.Consumer>
       );
     }
   }

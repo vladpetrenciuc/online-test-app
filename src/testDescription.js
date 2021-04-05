@@ -8,17 +8,31 @@ export default class TestDescription extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      testDifficulty: 1,
+      testTime: "",
+      questions: [],
       redirectToStartTest: false
     }
-    this.handleSubmit = this.handleSubmit.bind(this); //this will probably be redone with arrow functions
   }
 
-  handleSubmit(event) {
+  handleChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value });
+  }
+
+  handleSubmit = (context) => (event) => {
+    let testData = require("../testJSONs/difficulty" + this.state.testDifficulty + ".json");
+    //this.setState({ testTime: testData.time.toString(), questions: testData.questions });
+    context.setUserState({ testDifficulty: this.state.testDifficulty, testTime: testData.time.toString(), questions: testData.questions});
     this.setState({ redirectToStartTest: true });
   }
 
   selectDificulty() {
     let optionList = [];
+    optionList.push(
+      <option key={0} value={"none"}>
+        {"Please select the desired difficulty level"}
+      </option>
+    )
     for (let i = 1; i <= 3; i++) {
       optionList.push(
         <option key={i} value={i}>
@@ -39,9 +53,9 @@ export default class TestDescription extends Component {
             <div>
               <h2>Hello {context.firstName + ' ' + context.lastName}!</h2>
               <h2>Test Description and Dificulty</h2>
-              <form onSubmit={this.handleSubmit}>
+              <form onSubmit={this.handleSubmit(context)}>
                 <label>Select Dificulty:</label>
-                <select>
+                <select onChange={this.handleChange}>
                   {this.selectDificulty()}
                 </select>
                 <br></br>

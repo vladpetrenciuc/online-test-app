@@ -18,6 +18,11 @@ export default class Registration extends Component {
 
   selectListAge() {
     let optionList = [];
+    optionList.push(
+      <option key={0} value="none">
+        {"Please select your age"}
+      </option>
+    )
     for (let i = 14; i < 65; i++) {
       optionList.push(
         <option key={i} value={i}>

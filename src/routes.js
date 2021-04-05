@@ -7,17 +7,29 @@ import {
 } from "react-router-dom";
 import Registration from "./registration";
 import TestDescription from "./testDescription";
+import TestStart from "./testStart";
+import Result from "./result";
 import UserContext from "./userContext";
 
 export default class RouteAndSwitch extends Component {
-  setUserState = ({ firstName, lastName, age }) => {
-    this.setState({ firstName: firstName, lastName: lastName, age: age });
+  setUserState = ({ firstName, lastName, age, testDifficulty, testTime, questions }) => {
+    this.setState({
+      firstName: firstName,
+      lastName: lastName,
+      age: age,
+      testDifficulty: testDifficulty,
+      testTime: testTime,
+      questions: questions
+    });
   }
   state = {
     firstName: "",
     lastName: "",
     age: 14,
-    setUserState: this.setUserState
+    setUserState: this.setUserState,
+    testDifficulty: 0,
+    testTime: "",
+    questions: []
   }
 
   render() {
@@ -43,7 +55,13 @@ export default class RouteAndSwitch extends Component {
               <Route exact path="/test">
                 <TestDescription />
               </Route>
-              <Route path="/about">
+              <Route exact path="/testStart">
+                <TestStart />
+              </Route>
+              <Route exact path="/result">
+                <Result />
+              </Route>
+              <Route exact path="/about">
                 <About />
               </Route>
             </UserContext.Provider>

@@ -1,0 +1,18 @@
+{
+    "difficulty": 1,
+    "time": 2,
+    "questions": [
+        {
+            "question": "What does 1 + 1 equal to ?",
+            "answers": ["2", "3", "5"],
+            "correct": ["2"],
+            "type": "radio buttons"
+        },
+        {
+            "question": "Check which is the correct colour for the sky, in any moment of the day:",
+            "answers": ["red", "orange", "yellow", "green", "blue", "purple"],
+            "correct":["red", "orange", "yellow", "blue", "purple"],
+            "type": "checkboxes"
+        }
+    ]
+}

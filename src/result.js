@@ -1,23 +1,18 @@
-import React, { Component } from "react";
+import React, { useContext, useState } from "react";
 import UserContext from "./userContext";
 
-export default class Result extends Component{
-    constructor(props){
-        super(props);
-        this.state={
+export default function Result() {
+  const context = useContext(UserContext);
+  const [state, setState] = useState({
 
-        }
-    }
+  });
 
-    render(){
-        return(
-            <UserContext.Consumer>
-                {context => (
-                    <div>
-                        <h2>Congratulations on finishing the test!</h2>
-                    </div>
-                )}
-            </UserContext.Consumer>
-        )
-    }
+  return (
+    <div>
+      <h2>Congratulations on finishing the test!</h2>
+      <h3>Your result is: {
+        //show the result from context here
+      }</h3>
+    </div>
+  )
 }

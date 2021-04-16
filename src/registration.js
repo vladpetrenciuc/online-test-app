@@ -1,22 +1,29 @@
-import React, { Component } from "react";
+import React, { useContext, useState } from "react";
 import { Redirect } from "react-router-dom";
 import UserContext from "./userContext";
 
-export default class Registration extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      firstName: "",
-      lastName: "",
-      age: 0,
-      redirectToTest: false
-    }
+export default function Registration() {
+  const context = useContext(UserContext);
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this); //this will probably be redone with arrow functions
+  const [state, setState] = useState({
+    firstName: "",
+    lastName: "",
+    age: 0,
+    redirectToTest: false
+  })
+
+  const handleChange = (event) => {
+    setState(prevState => {
+      return { ...prevState, [event.target.name]: event.target.value }
+    });
   }
 
-  selectListAge() {
+  const handleSubmit = (context) => (event) => {
+    context.setUserState({ firstName: state.firstName, lastName: state.lastName, age: state.age });
+    setState({ redirectToTest: true });
+  }
+
+  const selectListAge = () => {
     let optionList = [];
     optionList.push(
       <option key={0} value="none">
@@ -33,52 +40,38 @@ export default class Registration extends Component {
     return optionList;
   }
 
-  handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
-  }
-
-  handleSubmit = (context) => (event) => {
-    context.setUserState({ firstName: this.state.firstName, lastName: this.state.lastName, age: this.state.age });
-    this.setState({redirectToTest: true });
-  }
-
-  render() {
-    if (this.state.redirectToTest === true) {
-      return (
-        <Redirect to="/test" />
-      )
-    } else {
-      return (
-        <UserContext.Consumer>{context => (
-          <div>
-            <h2>Registration</h2>
-            <form onSubmit={this.handleSubmit(context)}>
-              <label>
-                First Name:
-            <input type="text" name="firstName" onChange={this.handleChange} />
-              </label>
-              <br></br>
-              <br></br>
-              <label>
-                Last Name:
-            <input type="text" name="lastName" onChange={this.handleChange} />
-              </label>
-              <br></br>
-              <br></br>
-              <label>
-                Age:
-              <select name="age" onChange={this.handleChange}>
-                  {this.selectListAge()}
-                </select>
-              </label>
-              <br></br>
-              <br></br>
-              <input type="submit" value="Submit" />
-            </form>
-          </div>)}
-
-        </UserContext.Consumer>
-      );
-    }
+  if (state.redirectToTest === true) {
+    return (
+      <Redirect to="/test" />
+    )
+  } else {
+    return (
+      <div>
+        <h2>Registration</h2>
+        <form onSubmit={handleSubmit(context)}>
+          <label>
+            First Name:
+            <input type="text" name="firstName" onChange={handleChange} />
+          </label>
+          <br></br>
+          <br></br>
+          <label>
+            Last Name:
+            <input type="text" name="lastName" onChange={handleChange} />
+          </label>
+          <br></br>
+          <br></br>
+          <label>
+            Age:
+              <select name="age" onChange={handleChange}>
+              {selectListAge()}
+            </select>
+          </label>
+          <br></br>
+          <br></br>
+          <input type="submit" value="Submit" />
+        </form>
+      </div>
+    )
   }
 }

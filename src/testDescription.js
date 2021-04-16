@@ -1,32 +1,29 @@
-import React, { Component } from "react";
+import React, { useState, useContext } from "react";
 import { Redirect } from "react-router-dom";
 import UserContext from "./userContext";
-//import { UserContextConsumer } from "./userContext"
 
-export default class TestDescription extends Component {
+export default function TestDescription() {
+  const context = useContext(UserContext);
+  const [state, setState] = useState({
+    testDifficulty: 1,
+    testTime: "",
+    questions: [],
+    redirectToStartTest: false
+  })
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      testDifficulty: 1,
-      testTime: "",
-      questions: [],
-      redirectToStartTest: false
-    }
+  const handleChange = (event) => {
+    setState(prevState => {
+      return { ...prevState, [event.target.name]: event.target.value }
+    });
   }
 
-  handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
+  const handleSubmit = (context) => (event) => {
+    const testData = require("../testJSONs/difficulty" + state.testDifficulty + ".json");
+    context.setUserState({ testDifficulty: state.testDifficulty, testTime: testData.time.toString(), questions: testData.questions });
+    setState({ redirectToStartTest: true });
   }
 
-  handleSubmit = (context) => (event) => {
-    let testData = require("../testJSONs/difficulty" + this.state.testDifficulty + ".json");
-    //this.setState({ testTime: testData.time.toString(), questions: testData.questions });
-    context.setUserState({ testDifficulty: this.state.testDifficulty, testTime: testData.time.toString(), questions: testData.questions});
-    this.setState({ redirectToStartTest: true });
-  }
-
-  selectDificulty() {
+  const selectDificulty = () => {
     let optionList = [];
     optionList.push(
       <option key={0} value={"none"}>
@@ -43,30 +40,24 @@ export default class TestDescription extends Component {
     return optionList;
   }
 
-  render() {
-    if (this.state.redirectToStartTest === true) {
-      return <Redirect to="/testStart" />;
-    } else {
-      return (
-        <UserContext.Consumer>
-          {context => (
-            <div>
-              <h2>Hello {context.firstName + ' ' + context.lastName}!</h2>
-              <h2>Test Description and Dificulty</h2>
-              <form onSubmit={this.handleSubmit(context)}>
-                <label>Select Dificulty:</label>
-                <select onChange={this.handleChange}>
-                  {this.selectDificulty()}
-                </select>
-                <br></br>
-                <br></br>
-                <input type="submit" value="Begin Test" />
-              </form>
-              <h3>TO DO: Here will appear the test description depending on dificulty</h3>
-            </div>
-          )}
-        </UserContext.Consumer>
-      )
-    }
+  if (state.redirectToStartTest === true) {
+    return <Redirect to="/testStart" />;
+  } else {
+    return (
+      <div>
+        <h2>Hello {context.firstName + ' ' + context.lastName}!</h2>
+        <h2>Test Description and Dificulty</h2>
+        <form onSubmit={handleSubmit(context)}>
+          <label>Select Dificulty:</label>
+          <select onChange={handleChange}>
+            {selectDificulty()}
+          </select>
+          <br></br>
+          <br></br>
+          <input type="submit" value="Begin Test" />
+        </form>
+        <h3>TO DO: Here will appear the test description depending on dificulty</h3>
+      </div>
+    )
   }
 }

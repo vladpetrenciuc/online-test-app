@@ -1,63 +1,56 @@
-import React, { Component } from "react";
+import React, { useState, useContext } from "react";
 import UserContext from "./userContext";
 import { Redirect } from "react-router-dom";
 
-export default class Test extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
+export default function Test() {
+  const context = useContext(UserContext);
+  const [state, setState] = useState(
+    {
       question_number: 0,
       redirectToResult: false
     }
-  }
+  )
 
-  handleClick = (context) => (event) => {
-    if (this.state.question_number === context.questions.length-1) {
-      this.setState({ redirectToResult: true });
+  const handleClick = (context) => (event) => {
+    if (state.question_number === context.questions.length - 1) {
+      setState({ redirectToResult: true });
     } else {
-      this.setState({ question_number: this.state.question_number + 1 });
+      setState({ question_number: state.question_number + 1 });
     }
   }
 
-  buttonText = (context) => {
-    if (this.state.question_number < context.questions.length-1) {
+  const buttonText = (context) => {
+    if (this.state.question_number < context.questions.length - 1) {
       return "Next question";
     } else {
       return "End test";
     }
   }
 
-  render() {
-
-    if (this.state.redirectToResult) {
-      return(
+  if (this.state.redirectToResult) {
+    return (
       <Redirect to="/result" />
-      )
-    } else {
-      return (
-        <UserContext.Consumer>
-          {context => (
-            <div>
-              <h2>Question number {this.state.question_number + 1}</h2>
-              <h2>{context.questions[this.state.question_number]["question"]}</h2>
-              <form>
-                {
-                  Object.keys(context.questions[this.state.question_number]["answers"]).map((answer) => {
-                    return (
-                      <label key={answer}>
-                        <input type="radio" value={context.questions[this.state.question_number]["answers"][answer]} name="answer" />{context.questions[this.state.question_number]["answers"][answer]}
-                        <br />
-                      </label>
-                    )
-                  })
-                }
-                <br />
-              </form>
-              <input type="button" value={this.buttonText(context)} onClick={this.handleClick(context)} />
-            </div>
-          )}
-        </UserContext.Consumer>
-      )
-    }
+    )
+  } else {
+    return (
+      <div>
+        <h2>Question number {state.question_number + 1}</h2>
+        <h2>{context.questions[state.question_number]["question"]}</h2>
+        <form>
+          {
+            Object.keys(context.questions[state.question_number]["answers"]).map((answer) => {
+              return (
+                <label key={answer}>
+                  <input type="radio" value={context.questions[state.question_number]["answers"][answer]} name="answer" />{context.questions[state.question_number]["answers"][answer]}
+                  <br />
+                </label>
+              )
+            })
+          }
+          <br />
+        </form>
+        <input type="button" value={buttonText(context)} onClick={handleClick(context)} />
+      </div>
+    )
   }
 }

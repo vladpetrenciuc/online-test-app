@@ -1,14 +1,15 @@
 import React, { useState, useContext } from "react";
-import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import UserContext from "./userContext";
 
 export default function TestDescription() {
   const context = useContext(UserContext);
+  const history = useHistory();
+
   const [state, setState] = useState({
     testDifficulty: 1,
     testTime: "",
     questions: [],
-    redirectToStartTest: false
   })
 
   const handleChange = (event) => {
@@ -17,10 +18,10 @@ export default function TestDescription() {
     });
   }
 
-  const handleSubmit = (context) => (event) => {
+  const handleSubmit = (event) => {
     const testData = require("../testJSONs/difficulty" + state.testDifficulty + ".json");
     context.setUserState({ testDifficulty: state.testDifficulty, testTime: testData.time.toString(), questions: testData.questions });
-    setState({ redirectToStartTest: true });
+    history.push("/testStart");
   }
 
   const selectDificulty = () => {
@@ -40,24 +41,20 @@ export default function TestDescription() {
     return optionList;
   }
 
-  if (state.redirectToStartTest === true) {
-    return <Redirect to="/testStart" />;
-  } else {
-    return (
-      <div>
-        <h2>Hello {context.firstName + ' ' + context.lastName}!</h2>
-        <h2>Test Description and Dificulty</h2>
-        <form onSubmit={handleSubmit(context)}>
-          <label>Select Dificulty:</label>
-          <select onChange={handleChange}>
-            {selectDificulty()}
-          </select>
-          <br></br>
-          <br></br>
-          <input type="submit" value="Begin Test" />
-        </form>
-        <h3>TO DO: Here will appear the test description depending on dificulty</h3>
-      </div>
-    )
-  }
+  return (
+    <div>
+      <h2>Hello {context.firstName + ' ' + context.lastName}!</h2>
+      <h2>Test Description and Dificulty</h2>
+      <form onSubmit={handleSubmit}>
+        <label>Select Dificulty:</label>
+        <select onChange={handleChange}>
+          {selectDificulty()}
+        </select>
+        <br></br>
+        <br></br>
+        <input type="submit" value="Begin Test" />
+      </form>
+      <h3>TO DO: Here will appear the test description depending on dificulty</h3>
+    </div>
+  )
 }

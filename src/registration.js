@@ -1,15 +1,15 @@
 import React, { useContext, useState } from "react";
-import { Redirect } from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import UserContext from "./userContext";
 
 export default function Registration() {
   const context = useContext(UserContext);
+  const history = useHistory();
 
   const [state, setState] = useState({
     firstName: "",
     lastName: "",
     age: 0,
-    redirectToTest: false
   })
 
   const handleChange = (event) => {
@@ -18,9 +18,9 @@ export default function Registration() {
     });
   }
 
-  const handleSubmit = (context) => (event) => {
+  const handleSubmit = (event) => {
     context.setUserState({ firstName: state.firstName, lastName: state.lastName, age: state.age });
-    setState({ redirectToTest: true });
+    history.push("/test");
   }
 
   const selectListAge = () => {
@@ -40,15 +40,10 @@ export default function Registration() {
     return optionList;
   }
 
-  if (state.redirectToTest === true) {
-    return (
-      <Redirect to="/test" />
-    )
-  } else {
     return (
       <div>
         <h2>Registration</h2>
-        <form onSubmit={handleSubmit(context)}>
+        <form onSubmit={handleSubmit}>
           <label>
             First Name:
             <input type="text" name="firstName" onChange={handleChange} />
@@ -73,5 +68,5 @@ export default function Registration() {
         </form>
       </div>
     )
-  }
+  
 }

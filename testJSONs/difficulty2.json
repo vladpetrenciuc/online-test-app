@@ -1,0 +1,18 @@
+{
+    "difficulty": 2,
+    "time": 2,
+    "questions": [
+        {
+            "question": "How much water should an average adult drink per day ?",
+            "answers": ["1 litre", "2 litres", "5 litres"],
+            "correct": ["2"],
+            "type": "radio buttons"
+        },
+        {
+            "question": "Which of these are PC components?",
+            "answers": ["Fatherboard", "Soft Disk", "Monitor", "RAM Memory", "Graphics Card", "SATA Cable"],
+            "correct":["RAM Memory", "Graphics Card", "SATA Cable"],
+            "type": "checkboxes"
+        }
+    ]
+}

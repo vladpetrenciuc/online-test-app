@@ -1,24 +1,36 @@
-import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import UserContext from "./userContext";
-//import { UserContextConsumer } from "./userContext"
 
-export default class TestDescription extends Component {
+export default function TestDescription() {
+  const context = useContext(UserContext);
+  const history = useHistory();
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      redirectToStartTest: false
-    }
-    this.handleSubmit = this.handleSubmit.bind(this); //this will probably be redone with arrow functions
+  const [state, setState] = useState({
+    testDifficulty: 1,
+    testTime: "",
+    questions: [],
+  })
+
+  const handleChange = (event) => {
+    setState(prevState => {
+      return { ...prevState, [event.target.name]: event.target.value }
+    });
   }
 
-  handleSubmit(event) {
-    this.setState({ redirectToStartTest: true });
+  const handleSubmit = (event) => {
+    const testData = require("../testJSONs/difficulty" + state.testDifficulty + ".json");
+    context.setUserState({ testDifficulty: state.testDifficulty, testTime: testData.time.toString(), questions: testData.questions });
+    history.push("/testStart");
   }
 
-  selectDificulty() {
+  const selectDificulty = () => {
     let optionList = [];
+    optionList.push(
+      <option key={0} value={"none"}>
+        {"Please select the desired difficulty level"}
+      </option>
+    )
     for (let i = 1; i <= 3; i++) {
       optionList.push(
         <option key={i} value={i}>
@@ -29,30 +41,20 @@ export default class TestDescription extends Component {
     return optionList;
   }
 
-  render() {
-    if (this.state.redirectToStartTest === true) {
-      return <Redirect to="/testStart" />;
-    } else {
-      return (
-        <UserContext.Consumer>
-          {context => (
-            <div>
-              <h2>Hello {context.firstName + ' ' + context.lastName}!</h2>
-              <h2>Test Description and Dificulty</h2>
-              <form onSubmit={this.handleSubmit}>
-                <label>Select Dificulty:</label>
-                <select>
-                  {this.selectDificulty()}
-                </select>
-                <br></br>
-                <br></br>
-                <input type="submit" value="Begin Test" />
-              </form>
-              <h3>TO DO: Here will appear the test description depending on dificulty</h3>
-            </div>
-          )}
-        </UserContext.Consumer>
-      )
-    }
-  }
+  return (
+    <div>
+      <h2>Hello {context.firstName + ' ' + context.lastName}!</h2>
+      <h2>Test Description and Dificulty</h2>
+      <form onSubmit={handleSubmit}>
+        <label>Select Dificulty:</label>
+        <select onChange={handleChange}>
+          {selectDificulty()}
+        </select>
+        <br></br>
+        <br></br>
+        <input type="submit" value="Begin Test" />
+      </form>
+      <h3>TO DO: Here will appear the test description depending on dificulty</h3>
+    </div>
+  )
 }

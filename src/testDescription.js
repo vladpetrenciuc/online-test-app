@@ -20,7 +20,11 @@ export default function TestDescription() {
 
   const handleSubmit = (event) => {
     const testData = require("../testJSONs/difficulty" + state.testDifficulty + ".json");
-    context.setUserState({ testDifficulty: state.testDifficulty, testTime: testData.time.toString(), questions: testData.questions });
+    let prevContext = context;
+    prevContext.testDifficulty = state.testDifficulty;
+    prevContext.testTime = testData.time.toString();
+    prevContext.questions= testData.questions;
+    context.setUserState(prevContext);
     history.push("/testStart");
   }
 
@@ -47,7 +51,7 @@ export default function TestDescription() {
       <h2>Test Description and Dificulty</h2>
       <form onSubmit={handleSubmit}>
         <label>Select Dificulty:</label>
-        <select onChange={handleChange}>
+        <select name="testDifficulty" onChange={handleChange}>
           {selectDificulty()}
         </select>
         <br></br>

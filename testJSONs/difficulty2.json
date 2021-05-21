@@ -5,7 +5,7 @@
         {
             "question": "How much water should an average adult drink per day ?",
             "answers": ["1 litre", "2 litres", "5 litres"],
-            "correct": ["2"],
+            "correct": ["2 litres"],
             "type": "radio buttons"
         },
         {

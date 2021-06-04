@@ -1,8 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import UserContext from "./userContext";
+import { useHistory } from "react-router-dom";
 
 export default function Result() {
   const context = useContext(UserContext);
+  const history = useHistory();
+  const runOnce = 0;
 
   const answersEqual = (arr1, arr2) => {
     if (arr1 && arr2 && !Array.isArray(arr1) && !Array.isArray(arr2)) {
@@ -11,7 +14,7 @@ export default function Result() {
       } else {
         return false;
       }
-    } else {
+    } else if(arr1 && arr2) {
       if (arr1.length !== arr2.length) {
         return false;
       }
@@ -24,14 +27,37 @@ export default function Result() {
     }
   }
 
-  const getResult = () => {
-    let score = 0;
-    for (let i = 0; i < context.questions.length; i++) {
-      if (answersEqual(context.questions[i].correct, context.userAnswers[i])) {
-        score++;
-      }
+  const onBackButtonEvent = (e) => {
+    e.preventDefault();
+    if (window.confirm("Do you want to go back to the test description page? You will lose all your progress")) {
+      let prevContext = context;
+      prevContext.userAnswers = [];
+      context.setUserState(prevContext);
+      history.push("/test");
+    } else {
+      window.history.pushState(null, null, window.location.pathname);
     }
-    return (`${score}/${context.questions.length}`)
+  }
+
+
+  useEffect(() => {
+    window.history.pushState(null, null, window.location.pathname);
+    window.addEventListener('popstate', onBackButtonEvent);
+    return () => {
+      window.removeEventListener('popstate', onBackButtonEvent);
+    };
+  });
+
+  const getResult = () => {
+    if (runOnce === 0) {
+      let score = 0;
+      for (let i = 0; i < context.questions.length; i++) {
+        if (answersEqual(context.questions[i].correct, context.userAnswers[i])) {
+          score++;
+        }
+      }
+      return (`${score}/${context.questions.length}`)
+    }
   }
 
   return (

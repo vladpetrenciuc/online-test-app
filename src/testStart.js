@@ -87,7 +87,11 @@ export default function Test() {
     hours,
     isRunning,
     start
-  } = useTimer({ expiryTimestamp, onExpire: () => history.push("/result") });
+  } = useTimer({ expiryTimestamp, onExpire: () => {
+    let prevContext = context;
+    prevContext.userAnswers = state.userAnswers;
+    context.setUserState(prevContext);
+    history.push("/result")} });
 
 
   const onBackButtonEvent = (e) => {

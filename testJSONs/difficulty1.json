@@ -9,9 +9,9 @@
             "type": "radio buttons"
         },
         {
-            "question": "Check which is the correct colour for the sky, in any moment of the day:",
+            "question": "Check which is the correct colour for the sky:",
             "answers": ["red", "orange", "yellow", "green", "blue", "purple"],
-            "correct":["red", "orange", "yellow", "blue", "purple"],
+            "correct":["blue", "red"],
             "type": "checkboxes"
         }
     ]

@@ -12,14 +12,15 @@ import Result from "./result";
 import UserContext from "./userContext";
 
 export default class RouteAndSwitch extends Component {
-  setUserState = ({ firstName, lastName, age, testDifficulty, testTime, questions }) => {
+  setUserState = ({ firstName, lastName, age, testDifficulty, testTime, questions, userAnswers }) => {
     this.setState({
       firstName: firstName,
       lastName: lastName,
       age: age,
       testDifficulty: testDifficulty,
       testTime: testTime,
-      questions: questions
+      questions: questions,
+      userAnswers: userAnswers
     });
   }
   state = {
@@ -29,7 +30,8 @@ export default class RouteAndSwitch extends Component {
     setUserState: this.setUserState,
     testDifficulty: 0,
     testTime: "",
-    questions: []
+    questions: [],
+    userAnswers: {},
   }
 
   render() {
@@ -77,6 +79,7 @@ function About() {
   return (
     <div>
       <h2>About</h2>
+      <h3>Copyright Vlad Petrenciuc</h3>
     </div>
   );
 }

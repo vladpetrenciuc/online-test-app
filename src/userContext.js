@@ -7,7 +7,8 @@ export const UserContext = React.createContext(
     setUserState: () => { },
     testDifficulty: 0,
     testTime: "",
-    questions: []
+    questions: [],
+    userAnswers: {},
   }
 );
 export default UserContext;
